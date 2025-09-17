@@ -1,0 +1,188 @@
+[project]
+name = "agente_perfilamiento"
+version = "0.1.0"
+description = "Un agente vocacional que guía a personas de 14 a 25 años a elegir un área de IT para educarse."
+authors = [
+    {name = "Nicolás Canese"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = "~=3.11.9"
+
+dependencies = [
+    # Core LangChain ecosystem - minimal installation
+    "langchain>=0.3.0",
+    "langgraph>=0.6.0",
+    "langgraph-checkpoint>=2.1.0",
+    "langgraph-prebuilt>=0.6.0",
+    "langgraph-sdk>=0.2.0",
+    "langchain-core>=0.3.0",
+    "langchain-openai>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-text-splitters>=0.3.0",
+    "langsmith>=0.4.0",
+    
+    # Configuration and validation - minimal installation
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    
+    # Essential utilities - minimal installation
+    "requests>=2.31.0",
+    "httpx>=0.27.0",
+    "tenacity>=9.0.0",
+    "click>=8.0.0",
+    "rich>=14.0.0",
+    "PyYAML>=6.0.0",
+    
+    # AI/ML providers - minimal installation
+    "openai>=1.0.0",
+    "tiktoken>=0.11.0",
+]
+
+[project.optional-dependencies]
+# Development tools
+dev = [
+    "black>=24.0.0",
+    "flake8>=7.0.0",
+    "pylint>=3.0.0",
+    "bandit>=1.7.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-mock>=3.14.0",
+    "coverage>=7.0.0",
+]
+
+# Additional utilities and data processing (included in "all" installation)
+extras = [
+    "dataclasses-json>=0.6.0",
+    "numpy>=1.26.0",
+    "pandas>=2.0.0",
+    "pyarrow>=21.0.0",
+]
+
+# AWS and cloud services
+aws = [
+    "boto3>=1.40.0",
+    "botocore>=1.40.0",
+    "langchain-aws>=0.2.0",
+    "requests-aws4auth>=1.3.0",
+    "opensearch-py>=3.0.0",
+]
+
+# Web framework and API
+web = [
+    "fastapi>=0.116.0",
+    "uvicorn>=0.35.0",
+    "starlette>=0.47.0",
+    "h11>=0.16.0",
+]
+
+# Streamlit UI
+streamlit = [
+    "streamlit>=1.40.0",
+]
+
+# AI model providers
+ai-providers = [
+    "groq>=0.31.0",
+    "huggingface-hub>=0.34.0",
+]
+
+# Data science and evaluation
+data = [
+    "datasets>=4.0.0",
+    "ragas>=0.3.0",
+    "sqlalchemy>=2.0.0",
+    "pillow>=11.0.0",
+]
+
+# Testing
+test = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-mock>=3.14.0",
+    "httpx>=0.27.0",
+    "coverage>=7.0.0",
+]
+
+
+[project.scripts]
+agente_perfilamiento = "agente_perfilamiento.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agente_perfilamiento"]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "coverage[toml]>=6.5",
+    "pytest",
+]
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
+cov-report = [
+  "- coverage combine",
+  "coverage report",
+]
+cov-html = "coverage html"
+cov = [
+  "test-cov",
+  "cov-report",
+]
+
+[tool.black]
+target-version = ["py311"]
+line-length = 88
+skip-string-normalization = true
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-docstring",
+    "too-few-public-methods",
+    "too-many-arguments",
+    "too-many-locals",
+    "too-many-branches",
+    "too-many-statements",
+]
+
+[tool.mypy]
+python_version = "3.11.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
