@@ -47,7 +47,6 @@ class RouterAgent(BaseAgent):
         # # Simple routing logic
         # if not saludo_mostrado:
         #     return "welcome"
-
         # Check for farewell intentions
         farewell_keywords = [
             "adios",
@@ -63,7 +62,7 @@ class RouterAgent(BaseAgent):
 
         # For now, default to fallback for other cases
         # In a real implementation, this would include more sophisticated routing logic
-        return "fallback"
+        return "perfilamiento"
 
     def process(self, state: ConversationState) -> ConversationState:
         """
