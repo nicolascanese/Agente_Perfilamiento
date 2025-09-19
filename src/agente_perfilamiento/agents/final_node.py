@@ -68,6 +68,13 @@ class FinalAgent(BaseAgent):
                     role="assistant",
                     content=response,
                 )
+                # Session-wide stream for full summaries
+                get_memory_service().append_and_get_window(
+                    agent_name="session_agent",
+                    session_id=state["id_conversacion"],
+                    role="assistant",
+                    content=response,
+                )
         except Exception:
             pass
 

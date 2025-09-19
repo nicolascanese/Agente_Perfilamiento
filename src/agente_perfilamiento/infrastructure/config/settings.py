@@ -207,4 +207,9 @@ def ensure_data_directories() -> None:
     """
     os.makedirs(settings.conversations_dir, exist_ok=True)
     os.makedirs(settings.memory_dir, exist_ok=True)
+    # Ensure entity memory subdir
+    try:
+        os.makedirs(os.path.join(settings.memory_dir, "entities"), exist_ok=True)
+    except Exception:
+        pass
     logger.info("Data directories ensured")

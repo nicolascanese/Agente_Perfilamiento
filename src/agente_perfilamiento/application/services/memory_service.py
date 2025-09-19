@@ -4,13 +4,12 @@ Application service for managing short-term memory windows.
 
 from __future__ import annotations
 
-from dataclasses import asdict
-from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 from agente_perfilamiento.application.ports.memory_repository import MemoryRepository
 from agente_perfilamiento.domain.memory.models import ShortTermMemoryItem
 from agente_perfilamiento.infrastructure.logging.logger import get_logger
+
 
 logger = get_logger(__name__)
 
@@ -78,3 +77,4 @@ class MemoryService:
             "created_at": item.created_at.isoformat(),
             "agent_name": item.agent_name,
         }
+

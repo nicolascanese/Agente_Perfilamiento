@@ -91,7 +91,7 @@ class RouterAgent(BaseAgent):
             self.logger.error(f"Error in router processing: {e}")
             next_route = "fallback"
 
-        # Append latest user input to the target agent's short-term memory window
+        # Append latest user input to the target agent's and session's short-term memory windows
         try:
             session_id = state.get("id_conversacion", "")
             user_input = state.get("input_usuario", "")
@@ -110,6 +110,13 @@ class RouterAgent(BaseAgent):
                         role="user",
                         content=user_input,
                     )
+                # Also keep a session-wide stream to enable full-conversation summaries
+                get_memory_service().append_and_get_window(
+                    agent_name="session_agent",
+                    session_id=session_id,
+                    role="user",
+                    content=user_input,
+                )
         except Exception:
             pass
 

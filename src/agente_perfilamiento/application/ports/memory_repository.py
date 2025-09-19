@@ -10,13 +10,13 @@ from agente_perfilamiento.domain.memory.models import ShortTermMemoryItem
 
 class MemoryRepository(ABC):
     @abstractmethod
-    def save(self, item: ShortTermMemoryItem) -> None:  # pragma: no cover - interface
+    def save(self, item: ShortTermMemoryItem) -> None:  # pragma: no cover
         ...
 
     @abstractmethod
     def get_recent(
         self, agent_name: str, session_id: str, limit: Optional[int] = None
-    ) -> List[ShortTermMemoryItem]:  # pragma: no cover - interface
+    ) -> List[ShortTermMemoryItem]:  # pragma: no cover
         ...
 
     @abstractmethod
@@ -26,9 +26,10 @@ class MemoryRepository(ABC):
         session_id: str,
         ttl_seconds: Optional[int],
         max_items: Optional[int],
-    ) -> None:  # pragma: no cover - interface
+    ) -> None:  # pragma: no cover
         ...
 
     @abstractmethod
-    def clear_session(self, session_id: str) -> None:  # pragma: no cover - interface
+    def clear_session(self, session_id: str) -> None:  # pragma: no cover
         ...
+

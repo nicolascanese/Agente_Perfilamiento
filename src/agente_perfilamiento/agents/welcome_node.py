@@ -11,6 +11,7 @@ from langchain_core.tools import BaseTool
 
 from agente_perfilamiento.agents.base_agent import BaseAgent
 from agente_perfilamiento.agents.tools.memory_tools import get_conversation_memory
+from agente_perfilamiento.agents.tools.entity_tools import get_entity_memory
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
 from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
 
@@ -23,7 +24,7 @@ class WelcomeAgent(BaseAgent):
 
     def get_tools(self) -> List[BaseTool]:
         """Get the tools available for the welcome agent."""
-        return [get_conversation_memory]
+        return [get_conversation_memory, get_entity_memory]
 
     def get_fallback_response(self) -> str:
         """Get fallback response for welcome agent."""
@@ -69,6 +70,13 @@ class WelcomeAgent(BaseAgent):
             if state.get("id_conversacion"):
                 get_memory_service().append_and_get_window(
                     agent_name=self.agent_name,
+                    session_id=state["id_conversacion"],
+                    role="assistant",
+                    content=response,
+                )
+                # Session-wide stream for full summaries
+                get_memory_service().append_and_get_window(
+                    agent_name="session_agent",
                     session_id=state["id_conversacion"],
                     role="assistant",
                     content=response,

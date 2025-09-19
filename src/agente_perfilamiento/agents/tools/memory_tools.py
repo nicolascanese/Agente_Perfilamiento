@@ -10,6 +10,12 @@ from typing import Any, Dict, List
 from langchain_core.tools import tool
 
 from agente_perfilamiento.infrastructure.logging.logger import get_logger
+from agente_perfilamiento.application.services.long_term_memory_service import (
+    LongTermMemoryService,
+)
+from agente_perfilamiento.infrastructure.memory.file_long_term_repository import (
+    FileLongTermMemoryRepository,
+)
 from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
 
 logger = get_logger(__name__)
@@ -71,9 +77,12 @@ def save_conversation_memory(user_id: str, conversation_summary: str) -> str:
     try:
         if not user_id or not conversation_summary:
             return "Error: Información insuficiente para guardar la memoria."
-        logger.info(
-            f"Conversation memory saved for user {user_id}: {conversation_summary[:100]}..."
-        )
+        # Persist minimal long-term summary record
+        ltm = LongTermMemoryService(FileLongTermMemoryRepository())
+        ltm.save_summary({
+            "id_user": user_id,
+            "resumen": conversation_summary,
+        })
         return "Memoria de conversación guardada exitosamente."
 
     except Exception as e:
