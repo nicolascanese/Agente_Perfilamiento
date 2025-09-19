@@ -4,7 +4,7 @@ Tu función principal es analizar las solicitudes de los usuarios y determinar e
 
 Criterios de enrutamiento:
 - Si es la primera interacción o saludo → dirigir a "welcome"
-- Si el usuario indica que quiere terminar la conversación → dirigir a "final" 
+- Si el usuario indica que quiere terminar la conversación → dirigir a "final"
 - Si hay una solicitud específica que requiere procesamiento → analizar y determinar el mejor nodo
 - Si no puedes determinar la intención → dirigir a "fallback"
 

@@ -6,34 +6,35 @@ closing responses with summary capabilities.
 """
 
 from typing import List
+
 from langchain_core.tools import BaseTool
 
-from agente_perfilamiento.domain.models.conversation_state import ConversationState
 from agente_perfilamiento.agents.base_agent import BaseAgent
 from agente_perfilamiento.agents.tools.memory_tools import save_conversation_memory
+from agente_perfilamiento.domain.models.conversation_state import ConversationState
 
 
 class FinalAgent(BaseAgent):
     """Agent class for handling conversation finalization."""
-    
+
     def __init__(self):
         super().__init__("final_agent")
-    
+
     def get_tools(self) -> List[BaseTool]:
         """Get the tools available for the final agent."""
         return [save_conversation_memory]
-    
+
     def get_fallback_response(self) -> str:
         """Get fallback response for final agent."""
         return "¡Gracias por usar Agente_Perfilamiento! ¡Que tengas un excelente día!"
-    
+
     def process(self, state: ConversationState) -> ConversationState:
         """
         Process the conversation state through the final agent.
-        
+
         Args:
             state: Current conversation state
-            
+
         Returns:
             ConversationState: Updated conversation state with final response
         """
@@ -52,7 +53,7 @@ class FinalAgent(BaseAgent):
             **state,
             "mensajes_previos": messages,
             "conversation_finished": True,
-            "next_node": "memory"  # Proceed to memory node to save conversation
+            "next_node": "memory",  # Proceed to memory node to save conversation
         }
 
 
@@ -63,10 +64,10 @@ final_agent = FinalAgent()
 def final_node(state: ConversationState) -> ConversationState:
     """
     Function wrapper for final agent to maintain LangGraph compatibility.
-    
+
     Args:
         state: Current conversation state
-        
+
     Returns:
         Updated conversation state with final response
     """

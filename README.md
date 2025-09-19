@@ -69,7 +69,7 @@ Agente_Perfilamiento/
    ```bash
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
-   
+
 ### Configuration
 
 1. Copy the environment template:
@@ -88,7 +88,9 @@ Agente_Perfilamiento/
    ```bash
    mkdir -p data/conversations data/memory logs
    ```
-
+   ```PowerShell
+   New-Item -ItemType Directory -Force -Path data\conversations, data\memory, logs
+   ```
 ## Usage
 
 ### Command Line Interface
@@ -151,10 +153,10 @@ for message in st.session_state.messages:
 if prompt := st.chat_input("What can I help you with?"):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
+
     # Process through agent
     result = process_conversation("streamlit_user", prompt)
-    
+
     # Add assistant response
     for msg in result["mensajes_previos"]:
         if msg["role"] == "assistant":
