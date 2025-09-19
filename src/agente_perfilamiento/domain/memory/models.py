@@ -20,4 +20,3 @@ class ShortTermMemoryItem:
 @dataclass
 class MemoryWindow:
     items: List[ShortTermMemoryItem]
-

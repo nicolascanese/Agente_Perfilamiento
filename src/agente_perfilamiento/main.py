@@ -13,6 +13,7 @@ from typing import Optional
 #     FileConversationRepository,
 # )
 from agente_perfilamiento.application.orchestrator import app
+from agente_perfilamiento.application.services.memory_service import MemoryService
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
 from agente_perfilamiento.infrastructure.config.settings import (
     ensure_data_directories,
@@ -25,8 +26,10 @@ from agente_perfilamiento.infrastructure.logging.logger import (
 from agente_perfilamiento.infrastructure.memory.in_memory_repository import (
     InMemoryMemoryRepository,
 )
-from agente_perfilamiento.application.services.memory_service import MemoryService
-from agente_perfilamiento.infrastructure.memory.provider import set_memory_service, get_memory_service
+from agente_perfilamiento.infrastructure.memory.provider import (
+    get_memory_service,
+    set_memory_service,
+)
 
 logger = get_logger(__name__)
 

@@ -1,13 +1,18 @@
 import sys
+
 sys.path.append('src')
 
 from agente_perfilamiento.application.services.memory_service import MemoryService
-from agente_perfilamiento.infrastructure.memory.in_memory_repository import InMemoryMemoryRepository
+from agente_perfilamiento.infrastructure.memory.in_memory_repository import (
+    InMemoryMemoryRepository,
+)
 
 
 def main():
     repo = InMemoryMemoryRepository()
-    svc = MemoryService(repository=repo, ttl_seconds=None, max_items_per_agent=5, window_limit=3)
+    svc = MemoryService(
+        repository=repo, ttl_seconds=None, max_items_per_agent=5, window_limit=3
+    )
 
     session = 'test-session-1'
     agent = 'perfilamiento_agent'
@@ -30,4 +35,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

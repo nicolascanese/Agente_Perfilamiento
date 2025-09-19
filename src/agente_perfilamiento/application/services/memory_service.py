@@ -12,7 +12,6 @@ from agente_perfilamiento.application.ports.memory_repository import MemoryRepos
 from agente_perfilamiento.domain.memory.models import ShortTermMemoryItem
 from agente_perfilamiento.infrastructure.logging.logger import get_logger
 
-
 logger = get_logger(__name__)
 
 
@@ -79,4 +78,3 @@ class MemoryService:
             "created_at": item.created_at.isoformat(),
             "agent_name": item.agent_name,
         }
-

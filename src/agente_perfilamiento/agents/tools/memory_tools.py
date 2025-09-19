@@ -107,4 +107,3 @@ def clear_conversation_memory(user_id: str, session_id: str | None = None) -> st
     except Exception as e:
         logger.error(f"Error clearing conversation memory: {e}")
         return "Error al limpiar la memoria de conversación."
-
