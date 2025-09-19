@@ -11,6 +11,7 @@ from langgraph.graph import END, StateGraph
 from agente_perfilamiento.agents.fallback_node import fallback_node
 from agente_perfilamiento.agents.final_node import final_node
 from agente_perfilamiento.agents.memory_node import memory_node
+from agente_perfilamiento.agents.perfilamiento_node import perfilamiento_node
 from agente_perfilamiento.agents.router_node import router_node
 from agente_perfilamiento.agents.welcome_node import welcome_node
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
@@ -39,11 +40,13 @@ def create_agent_graph() -> StateGraph:
     builder.add_node("welcome", RunnableLambda(welcome_node))
     builder.add_node("final", RunnableLambda(final_node))
     builder.add_node("memory", RunnableLambda(memory_node))
+    builder.add_node("perfilamiento", RunnableLambda(perfilamiento_node))
     builder.add_node("fallback", RunnableLambda(fallback_node))
 
     # Add edges for conversation flow
     builder.add_edge("welcome", END)
     builder.add_edge("fallback", END)
+    builder.add_edge("perfilamiento", END)
     builder.add_edge("final", "memory")
     builder.add_edge("memory", END)
 
@@ -53,6 +56,7 @@ def create_agent_graph() -> StateGraph:
         lambda state: state["next_node"],
         {
             "welcome": "welcome",
+            "perfilamiento": "perfilamiento",
             "final": "final",
             "fallback": "fallback",
             # Additional nodes can be added here based on specific agent requirements

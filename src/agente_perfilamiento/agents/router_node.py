@@ -42,9 +42,10 @@ class RouterAgent(BaseAgent):
         messages = state.get("mensajes_previos", [])
         saludo_mostrado = state.get("saludo_mostrado", False)
 
-        # Simple routing logic
-        if not saludo_mostrado:
-            return "welcome"
+        # TODO refactor this logic to use AI agent for more complex routing decisions
+        # # Simple routing logic
+        # if not saludo_mostrado:
+        #     return "welcome"
 
         # Check for farewell intentions
         farewell_keywords = [

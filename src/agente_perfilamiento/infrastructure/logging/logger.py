@@ -35,6 +35,7 @@ def get_logger(name: str, level: Optional[str] = None) -> logging.Logger:
         console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)
+        logger.propagate = False  # Evita duplicados en consola/archivo
 
         # Create file handler (optional)
         log_dir = Path("logs")

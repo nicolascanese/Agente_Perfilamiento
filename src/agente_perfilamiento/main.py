@@ -9,9 +9,9 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-from agente_perfilamiento.adapters.conversation_repository import (
-    FileConversationRepository,
-)
+# from agente_perfilamiento.adapters.conversation_repository import (
+#     FileConversationRepository,
+# )
 from agente_perfilamiento.application.orchestrator import app
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
 from agente_perfilamiento.infrastructure.config.settings import (
