@@ -110,7 +110,24 @@ class BaseAgent(ABC):
         try:
             # Get tools and create agent
             tools = self.get_tools()
-            chat_prompt = self.create_chat_prompt()
+
+            # Build optional memory context as additional messages if available
+            additional_msgs = None
+            ctx = state.get("context_data") or {}
+            window = ctx.get("short_term_memory") if isinstance(ctx, dict) else None
+            if window:
+                try:
+                    lines = []
+                    for item in window:
+                        role = item.get("role", "?")
+                        content = item.get("content", "")
+                        lines.append(f"{role}: {content}")
+                    memory_block = "\n".join(lines)
+                    additional_msgs = [("system", f"Memoria reciente:\n{memory_block}")]
+                except Exception:
+                    additional_msgs = None
+
+            chat_prompt = self.create_chat_prompt(additional_msgs)
             llm = get_llm_model()
 
             # Create and execute agent (provider-agnostic)

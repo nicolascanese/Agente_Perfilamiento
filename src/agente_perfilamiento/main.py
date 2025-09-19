@@ -22,6 +22,11 @@ from agente_perfilamiento.infrastructure.logging.logger import (
     configure_logging,
     get_logger,
 )
+from agente_perfilamiento.infrastructure.memory.in_memory_repository import (
+    InMemoryMemoryRepository,
+)
+from agente_perfilamiento.application.services.memory_service import MemoryService
+from agente_perfilamiento.infrastructure.memory.provider import set_memory_service, get_memory_service
 
 logger = get_logger(__name__)
 
@@ -79,6 +84,18 @@ def process_conversation(
     # Add user message to history
     state["mensajes_previos"].append({"role": "user", "content": user_input})
 
+    # Append user message to short-term memory (router as default agent context)
+    try:
+        mem = get_memory_service()
+        mem.append_and_get_window(
+            agent_name="router_agent",
+            session_id=state["id_conversacion"],
+            role="user",
+            content=user_input,
+        )
+    except Exception:
+        pass
+
     try:
         # Process through agent orchestrator
         result = app.invoke(state)
@@ -122,6 +139,16 @@ def main():
     """
     configure_logging(settings.log_level)
     ensure_data_directories()
+
+    # Initialize short-term memory service (in-memory adapter for now)
+    repo = InMemoryMemoryRepository()
+    memory_service = MemoryService(
+        repository=repo,
+        ttl_seconds=settings.memory_ttl_seconds,
+        max_items_per_agent=settings.memory_max_items_per_agent,
+        window_limit=settings.memory_window_limit,
+    )
+    set_memory_service(memory_service)
 
     logger.info("Starting Agente_Perfilamiento CLI")
 

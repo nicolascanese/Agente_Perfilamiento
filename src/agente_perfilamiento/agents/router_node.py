@@ -11,6 +11,7 @@ from langchain_core.tools import BaseTool
 
 from agente_perfilamiento.agents.base_agent import BaseAgent
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
+from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
 
 
 class RouterAgent(BaseAgent):
@@ -90,6 +91,28 @@ class RouterAgent(BaseAgent):
         except Exception as e:
             self.logger.error(f"Error in router processing: {e}")
             next_route = "fallback"
+
+        # Append latest user input to the target agent's short-term memory window
+        try:
+            session_id = state.get("id_conversacion", "")
+            user_input = state.get("input_usuario", "")
+            if session_id and user_input:
+                target_agent_map = {
+                    "welcome": "welcome_agent",
+                    "perfilamiento": "perfilamiento_agent",
+                    "final": "final_agent",
+                    "fallback": "fallback_agent",
+                }
+                target_agent = target_agent_map.get(next_route)
+                if target_agent:
+                    get_memory_service().append_and_get_window(
+                        agent_name=target_agent,
+                        session_id=session_id,
+                        role="user",
+                        content=user_input,
+                    )
+        except Exception:
+            pass
 
         self.logger.debug("Router node processing completed")
 

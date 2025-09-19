@@ -93,6 +93,16 @@ class Settings:
         self.conversations_dir: str = f"{self.data_dir}/conversations"
         self.memory_dir: str = f"{self.data_dir}/memory"
 
+        # Memory configuration (short-term)
+        self.memory_provider: str = os.getenv("MEMORY_PROVIDER", "in_memory").lower()
+        self.memory_ttl_seconds: int | None = self._int_or_none(
+            os.getenv("MEMORY_TTL_SECONDS", "1800")
+        )
+        self.memory_max_items_per_agent: int | None = self._int_or_none(
+            os.getenv("MEMORY_MAX_ITEMS_PER_AGENT", "300")
+        )
+        self.memory_window_limit: int = int(os.getenv("MEMORY_WINDOW_LIMIT", "12"))
+
         self._validate_settings()
 
     def _validate_settings(self) -> None:
@@ -110,6 +120,15 @@ class Settings:
         logger.info(
             f"Using LLM provider: {self.llm_provider} with model: {self.llm_model_name}"
         )
+
+    @staticmethod
+    def _int_or_none(value: str | None) -> int | None:
+        if value is None or str(value).strip().lower() in {"", "none", "null"}:
+            return None
+        try:
+            return int(value)
+        except Exception:
+            return None
 
 
 # Global settings instance

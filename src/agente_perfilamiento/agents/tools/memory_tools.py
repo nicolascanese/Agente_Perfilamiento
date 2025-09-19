@@ -10,41 +10,44 @@ from typing import Any, Dict, List
 from langchain_core.tools import tool
 
 from agente_perfilamiento.infrastructure.logging.logger import get_logger
+from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
 
 logger = get_logger(__name__)
 
 
 @tool
-def get_conversation_memory(user_id: str) -> str:
+def get_conversation_memory(
+    user_id: str,
+    agent_name: str = "perfilamiento_agent",
+    session_id: str | None = None,
+) -> str:
     """
-    Retrieve conversation memory for a specific user.
-
-    This tool allows agents to access previous conversation history
-    and context for personalized interactions.
+    Retrieve short-term conversation memory window for a specific session/agent.
 
     Args:
-        user_id: The unique identifier for the user
+        user_id: The unique identifier for the user (for logging/trace)
+        agent_name: Agent name whose window to read
+        session_id: Conversation/session identifier
 
     Returns:
-        str: Summary of previous conversations or empty if no history exists
+        str: Recent window formatted as text, or notice if empty
     """
     logger.info(f"Retrieving conversation memory for user: {user_id}")
 
     try:
-        # In a real implementation, this would query a database or memory store
-        # For now, return a placeholder response
-        # TODO: Implement actual memory retrieval logic
-
-        if not user_id:
-            return "No hay información previa disponible."
-
-        # Placeholder logic - replace with actual memory retrieval
-        memory_summary = (
-            f"Usuario {user_id}: Primera interacción o sin historial previo."
+        if not session_id:
+            return "Sin memoria de sesión disponible."
+        window = get_memory_service().get_window(
+            agent_name=agent_name, session_id=session_id
         )
-
-        logger.debug(f"Memory retrieved for user {user_id}")
-        return memory_summary
+        if not window:
+            return "Sin información previa disponible."
+        formatted = []
+        for item in window:
+            role = item.get("role", "?")
+            content = item.get("content", "")
+            formatted.append(f"{role}: {content}")
+        return "\n".join(formatted)
 
     except Exception as e:
         logger.error(f"Error retrieving conversation memory: {e}")
@@ -54,10 +57,7 @@ def get_conversation_memory(user_id: str) -> str:
 @tool
 def save_conversation_memory(user_id: str, conversation_summary: str) -> str:
     """
-    Save conversation memory for a specific user.
-
-    This tool allows agents to persist important conversation information
-    for future reference.
+    Save conversation summary for a specific user (long-term use case placeholder).
 
     Args:
         user_id: The unique identifier for the user
@@ -69,18 +69,11 @@ def save_conversation_memory(user_id: str, conversation_summary: str) -> str:
     logger.info(f"Saving conversation memory for user: {user_id}")
 
     try:
-        # In a real implementation, this would save to a database or memory store
-        # For now, just log the operation
-        # TODO: Implement actual memory saving logic
-
         if not user_id or not conversation_summary:
             return "Error: Información insuficiente para guardar la memoria."
-
-        # Placeholder logic - replace with actual memory saving
         logger.info(
             f"Conversation memory saved for user {user_id}: {conversation_summary[:100]}..."
         )
-
         return "Memoria de conversación guardada exitosamente."
 
     except Exception as e:
@@ -89,14 +82,13 @@ def save_conversation_memory(user_id: str, conversation_summary: str) -> str:
 
 
 @tool
-def clear_conversation_memory(user_id: str) -> str:
+def clear_conversation_memory(user_id: str, session_id: str | None = None) -> str:
     """
-    Clear conversation memory for a specific user.
-
-    This tool allows agents to reset conversation history when needed.
+    Clear short-term conversation memory for a specific session.
 
     Args:
         user_id: The unique identifier for the user
+        session_id: Conversation/session identifier
 
     Returns:
         str: Confirmation message about the clear operation
@@ -104,18 +96,15 @@ def clear_conversation_memory(user_id: str) -> str:
     logger.info(f"Clearing conversation memory for user: {user_id}")
 
     try:
-        # In a real implementation, this would clear from a database or memory store
-        # For now, just log the operation
-        # TODO: Implement actual memory clearing logic
-
-        if not user_id:
-            return "Error: ID de usuario requerido para limpiar memoria."
-
-        # Placeholder logic - replace with actual memory clearing
-        logger.info(f"Conversation memory cleared for user {user_id}")
-
+        if not session_id:
+            return "Error: session_id requerido para limpiar memoria."
+        get_memory_service().clear_session(session_id)
+        logger.info(
+            f"Conversation memory cleared for user {user_id} session {session_id}"
+        )
         return "Memoria de conversación limpiada exitosamente."
 
     except Exception as e:
         logger.error(f"Error clearing conversation memory: {e}")
         return "Error al limpiar la memoria de conversación."
+
