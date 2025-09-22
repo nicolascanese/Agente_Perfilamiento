@@ -48,17 +48,17 @@ class RouterAgent(BaseAgent):
         # if not saludo_mostrado:
         #     return "welcome"
         # Check for farewell intentions
-        farewell_keywords = [
-            "adios",
-            "adiós",
-            "hasta luego",
-            "chao",
-            "terminar",
-            "salir",
-            "fin",
-        ]
-        if any(keyword in user_input for keyword in farewell_keywords):
-            return "final"
+        # farewell_keywords = [
+        #     "adios",
+        #     "adiós",
+        #     "hasta luego",
+        #     "chao",
+        #     "terminar",
+        #     "salir",
+        #     "fin",
+        # ]
+        # if any(keyword in user_input for keyword in farewell_keywords):
+        #     return "final"
 
         # For now, default to fallback for other cases
         # In a real implementation, this would include more sophisticated routing logic
