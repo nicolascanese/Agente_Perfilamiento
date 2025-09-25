@@ -3,6 +3,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
+import re
 from typing import Any, Dict, List, Optional
 
 from langchain_core.tools import BaseTool
@@ -98,17 +99,26 @@ class EntrevistadorAgent(BaseAgent):
         else:
             response = "Gracias. Voy a pasar tu perfil al analisis."
 
+        messages = state.get("mensajes_previos", []) or []
+        structured_profile: Optional[Dict[str, Any]] = None
+
         if ready_for_analysis and summary_payload is None:
+            structured_profile = self._generate_structured_profile(
+                base_state=state,
+                conversation_history=conversation_history,
+                user_profile=user_profile,
+                assistant_messages=messages,
+            )
             summary_payload = self._build_summary_payload(
                 state=state,
                 conversation_history=conversation_history,
                 user_profile=user_profile,
                 question_index=current_question_index,
+                structured_profile=structured_profile,
             )
             summary_path = self._persist_summary(summary_payload)
             response = "Gracias. Voy a pasar tu perfil al analisis."
 
-        messages = state.get("mensajes_previos", []) or []
         messages.append({"role": "assistant", "content": response})
 
         try:
@@ -140,14 +150,114 @@ class EntrevistadorAgent(BaseAgent):
             "next_node": None,
         }
 
+    def _generate_structured_profile(
+        self,
+        base_state: ConversationState,
+        conversation_history: List[Dict[str, str]],
+        user_profile: Dict[str, Any],
+        assistant_messages: List[Dict[str, str]],
+    ) -> Optional[Dict[str, Any]]:
+        """Ask the interviewer LLM for the structured JSON profile."""
+
+        if not conversation_history:
+            return None
+
+        transcript = self._build_transcript(assistant_messages, conversation_history)
+        if not transcript:
+            return None
+
+        summary_input = {
+            "perfil_nombre": base_state.get("id_user") or "",
+            "id_conversacion": base_state.get("id_conversacion"),
+            "transcript": transcript,
+            "user_profile": user_profile,
+        }
+
+        summary_instruction = (
+            "Ignora cualquier instrucción previa que te obligue a finalizar con <<FIN_ENTREVISTA>>. "
+            "Genera únicamente un JSON válido siguiendo exactamente la estructura solicitada. "
+            "No incluyas texto adicional, explicaciones ni formato markdown."
+        )
+        schema_hint = json.dumps(
+            {
+                "perfil_nombre": "<texto>",
+                "dimensiones_mapeadas": {
+                    "intereses": ["<tag>", "<tag>"],
+                    "estilo_aprendizaje": ["<tag>", "<tag>"],
+                    "competencias_tecnicas_iniciales": {"<competencia>": "<nivel>"},
+                    "valores_aspiraciones": ["<tag>"],
+                },
+                "tags_acumulados_vector": {"<tag>": 1},
+                "Resumen": {},
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+
+        summary_state = {
+            **base_state,
+            "input_usuario": (
+                f"{summary_instruction}\n"
+                f"Formato esperado:\n{schema_hint}\n\n"
+                f"Datos de referencia:\n"
+                + json.dumps(summary_input, ensure_ascii=False)
+            ),
+        }
+
+        response = self.execute_agent(summary_state)
+        structured = self._extract_json_block(response)
+        if not structured:
+            self.logger.warning("Entrevistador agent did not return parsable structured profile")
+        return structured
+
     @staticmethod
+    def _build_transcript(
+        assistant_messages: List[Dict[str, str]],
+        conversation_history: List[Dict[str, str]],
+    ) -> List[Dict[str, str]]:
+        transcript: List[Dict[str, str]] = []
+        assistant_contents = [
+            msg.get("content", "")
+            for msg in assistant_messages
+            if isinstance(msg, dict) and msg.get("role") == "assistant"
+        ]
+
+        for idx, entry in enumerate(conversation_history):
+            user_content = entry.get("content") if isinstance(entry, dict) else None
+            if idx < len(assistant_contents):
+                question = assistant_contents[idx]
+                if question:
+                    transcript.append({"role": "assistant", "content": question})
+            if user_content:
+                transcript.append({"role": "user", "content": user_content})
+
+        return transcript
+
+    @staticmethod
+    def _extract_json_block(text: str) -> Optional[Dict[str, Any]]:
+        if not text:
+            return None
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            match = re.search(r"\{.*\}", text, re.DOTALL)
+            if match:
+                candidate = match.group(0)
+                try:
+                    return json.loads(candidate)
+                except json.JSONDecodeError:
+                    return None
+        return None
+
     def _build_summary_payload(
+        self,
         state: ConversationState,
         conversation_history: List[Dict[str, str]],
         user_profile: Dict[str, Any],
         question_index: int,
+        structured_profile: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        return {
+        payload = {
             "id_user": state.get("id_user"),
             "session_id": state.get("id_conversacion"),
             "created_at": datetime.utcnow().isoformat(),
@@ -155,6 +265,9 @@ class EntrevistadorAgent(BaseAgent):
             "conversation_history": conversation_history,
             "user_profile": user_profile,
         }
+        if structured_profile:
+            payload["structured_profile"] = structured_profile
+        return payload
 
     def _persist_summary(self, payload: Dict[str, Any]) -> str:
         base_dir = Path(settings.data_dir) / "interviews"

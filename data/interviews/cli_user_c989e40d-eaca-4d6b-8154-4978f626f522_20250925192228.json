@@ -1,0 +1,120 @@
+{
+  "id_user": "cli_user",
+  "session_id": "c989e40d-eaca-4d6b-8154-4978f626f522",
+  "created_at": "2025-09-25T19:22:28.044451",
+  "current_question_index": 15,
+  "conversation_history": [
+    {
+      "role": "user",
+      "content": "ok continuemos"
+    },
+    {
+      "role": "user",
+      "content": "hablando con mi novia"
+    },
+    {
+      "role": "user",
+      "content": "ver series"
+    },
+    {
+      "role": "user",
+      "content": "ficcion"
+    },
+    {
+      "role": "user",
+      "content": "el señor de los anillos"
+    },
+    {
+      "role": "user",
+      "content": "ambiente"
+    },
+    {
+      "role": "user",
+      "content": "marcha"
+    },
+    {
+      "role": "user",
+      "content": "lider"
+    },
+    {
+      "role": "user",
+      "content": "clasico"
+    },
+    {
+      "role": "user",
+      "content": "economia"
+    },
+    {
+      "role": "user",
+      "content": "c"
+    },
+    {
+      "role": "user",
+      "content": "b"
+    },
+    {
+      "role": "user",
+      "content": "leer bien la docu"
+    },
+    {
+      "role": "user",
+      "content": "calmo"
+    },
+    {
+      "role": "user",
+      "content": "excel"
+    }
+  ],
+  "user_profile": {
+    "respuestas_test": [
+      "ok continuemos",
+      "hablando con mi novia",
+      "ver series",
+      "ficcion",
+      "el señor de los anillos",
+      "ambiente",
+      "marcha",
+      "lider",
+      "clasico",
+      "economia",
+      "c",
+      "b",
+      "leer bien la docu",
+      "calmo",
+      "excel"
+    ],
+    "intereses": [],
+    "valores": []
+  },
+  "structured_profile": {
+    "perfil_nombre": "cli_user",
+    "dimensiones_mapeadas": {
+      "intereses": [
+        "creatividad_visual",
+        "pensamiento_logico"
+      ],
+      "estilo_aprendizaje": [
+        "adaptabilidad",
+        "metodico_estructurado"
+      ],
+      "competencias_tecnicas_iniciales": {
+        "excel": "alto"
+      },
+      "valores_aspiraciones": [
+        "orientacion_cliente",
+        "perspicacia_empresarial"
+      ]
+    },
+    "tags_acumulados_vector": {
+      "creatividad_visual": 1,
+      "pensamiento_logico": 2,
+      "adaptabilidad": 1,
+      "metodico_estructurado": 1,
+      "orientacion_cliente": 1,
+      "perspicacia_empresarial": 1,
+      "atencion_al_detalle": 1,
+      "empatia": 1
+    },
+    "Resumen": {}
+  }
+}
