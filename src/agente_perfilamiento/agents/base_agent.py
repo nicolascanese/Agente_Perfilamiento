@@ -83,6 +83,9 @@ class BaseAgent(ABC):
             ChatPromptTemplate: The configured prompt template
         """
         system_prompt = self.load_prompt()
+        # Escape curly braces in system prompts to avoid ChatPromptTemplate
+        # interpreting JSON/examples as template variables.
+        system_prompt = system_prompt.replace("{", "{{").replace("}", "}}")
 
         messages = [
             ("system", system_prompt),

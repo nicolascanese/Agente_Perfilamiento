@@ -4,7 +4,7 @@ Simple provider to share a singleton MemoryService across nodes.
 
 from typing import Optional
 
-from agente_perfilamiento.application.services.memory_service import MemoryService
+from agente_perfilamiento.domain.services.memory_service import MemoryService
 
 _memory_service: Optional[MemoryService] = None
 

@@ -1,0 +1,64 @@
+{
+  "id_user": "Nicolás",
+  "session_id": "cfb31ee1-3653-4312-ba36-6c76295066d6",
+  "created_at": "2025-09-25T15:13:02.982625",
+  "current_question_index": 10,
+  "conversation_history": [
+    {
+      "role": "user",
+      "content": "quiero hacer mi test"
+    },
+    {
+      "role": "user",
+      "content": "me baje un libro que me gusto mucho"
+    },
+    {
+      "role": "user",
+      "content": "es el señor d elos anillos, me gusta mucho la fantasia"
+    },
+    {
+      "role": "user",
+      "content": "me gusta el de terror"
+    },
+    {
+      "role": "user",
+      "content": "me bhacen pensar y mantienen la tension"
+    },
+    {
+      "role": "user",
+      "content": "voy directo a la accion"
+    },
+    {
+      "role": "user",
+      "content": "vos hace esto y yo esto"
+    },
+    {
+      "role": "user",
+      "content": "lo del auto clasico"
+    },
+    {
+      "role": "user",
+      "content": "resolver cualquier problema complejo"
+    },
+    {
+      "role": "user",
+      "content": "c"
+    }
+  ],
+  "user_profile": {
+    "respuestas_test": [
+      "quiero hacer mi test",
+      "me baje un libro que me gusto mucho",
+      "es el señor d elos anillos, me gusta mucho la fantasia",
+      "me gusta el de terror",
+      "me bhacen pensar y mantienen la tension",
+      "voy directo a la accion",
+      "vos hace esto y yo esto",
+      "lo del auto clasico",
+      "resolver cualquier problema complejo",
+      "c"
+    ],
+    "intereses": [],
+    "valores": []
+  }
+}

@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
-from agente_perfilamiento.application.ports.long_term_memory_repository import (
+from agente_perfilamiento.ports.long_term_memory_repository import (
     LongTermMemoryRepository,
 )
 from agente_perfilamiento.infrastructure.config.settings import settings
@@ -53,4 +53,3 @@ class FileLongTermMemoryRepository(LongTermMemoryRepository):
             if resumen:
                 blocks.append(resumen)
         return "\n\n---\n\n".join(blocks)
-

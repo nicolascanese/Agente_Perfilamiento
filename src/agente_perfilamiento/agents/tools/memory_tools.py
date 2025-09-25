@@ -10,13 +10,13 @@ from typing import Any, Dict, List
 from langchain_core.tools import tool
 
 from agente_perfilamiento.infrastructure.logging.logger import get_logger
-from agente_perfilamiento.application.services.long_term_memory_service import (
+from agente_perfilamiento.domain.services.long_term_memory_service import (
     LongTermMemoryService,
 )
-from agente_perfilamiento.infrastructure.memory.file_long_term_repository import (
+from agente_perfilamiento.adapters.file_long_term_repository import (
     FileLongTermMemoryRepository,
 )
-from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
+from agente_perfilamiento.infrastructure.persistence.provider import get_memory_service
 
 logger = get_logger(__name__)
 

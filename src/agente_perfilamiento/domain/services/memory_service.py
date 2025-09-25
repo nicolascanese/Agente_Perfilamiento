@@ -6,8 +6,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from agente_perfilamiento.application.ports.memory_repository import MemoryRepository
-from agente_perfilamiento.domain.memory.models import ShortTermMemoryItem
+from agente_perfilamiento.ports.memory_repository import MemoryRepository
+from agente_perfilamiento.domain.models.memory import ShortTermMemoryItem
 from agente_perfilamiento.infrastructure.logging.logger import get_logger
 
 
@@ -77,4 +77,3 @@ class MemoryService:
             "created_at": item.created_at.isoformat(),
             "agent_name": item.agent_name,
         }
-

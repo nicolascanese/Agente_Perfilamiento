@@ -6,8 +6,8 @@ from collections import defaultdict, deque
 from datetime import datetime, timedelta
 from typing import Deque, Dict, List, Optional, Tuple
 
-from agente_perfilamiento.application.ports.memory_repository import MemoryRepository
-from agente_perfilamiento.domain.memory.models import ShortTermMemoryItem
+from agente_perfilamiento.ports.memory_repository import MemoryRepository
+from agente_perfilamiento.domain.models.memory import ShortTermMemoryItem
 
 Key = Tuple[str, str]  # (session_id, agent_name)
 

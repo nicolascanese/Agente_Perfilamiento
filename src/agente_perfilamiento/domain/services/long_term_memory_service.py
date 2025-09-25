@@ -4,7 +4,7 @@ Application service for long-term memory summaries.
 
 from typing import Dict, List
 
-from agente_perfilamiento.application.ports.long_term_memory_repository import (
+from agente_perfilamiento.ports.long_term_memory_repository import (
     LongTermMemoryRepository,
 )
 
@@ -21,4 +21,3 @@ class LongTermMemoryService:
 
     def get_user_summaries_text(self, user_id: str) -> str:
         return self._repo.read_user_summaries_text(user_id)
-

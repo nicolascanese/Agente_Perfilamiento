@@ -1,0 +1,39 @@
+{
+  "id_user": "12345",
+  "session_id": "25572514-525b-433c-a6ec-d29b045bb6bd",
+  "created_at": "2025-09-25T13:43:15.365166",
+  "current_question_index": 5,
+  "conversation_history": [
+    {
+      "role": "user",
+      "content": "quiero aprender"
+    },
+    {
+      "role": "user",
+      "content": "me gusta la ciencia"
+    },
+    {
+      "role": "user",
+      "content": "la astronomía"
+    },
+    {
+      "role": "user",
+      "content": "como funcionan los astros me gusta"
+    },
+    {
+      "role": "user",
+      "content": "me gusta explorar todo primero"
+    }
+  ],
+  "user_profile": {
+    "respuestas_test": [
+      "quiero aprender",
+      "me gusta la ciencia",
+      "la astronomía",
+      "como funcionan los astros me gusta",
+      "me gusta explorar todo primero"
+    ],
+    "intereses": [],
+    "valores": []
+  }
+}

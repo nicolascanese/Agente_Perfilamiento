@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Dict
 
-from agente_perfilamiento.application.ports.entity_memory_repository import (
+from agente_perfilamiento.ports.entity_memory_repository import (
     EntityMemoryRepository,
 )
 from agente_perfilamiento.infrastructure.config.settings import settings
@@ -42,4 +42,3 @@ class FileEntityMemoryRepository(EntityMemoryRepository):
                 path.unlink()
             except Exception:
                 pass
-

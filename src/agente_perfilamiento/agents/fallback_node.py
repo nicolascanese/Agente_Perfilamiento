@@ -11,7 +11,7 @@ from langchain_core.tools import BaseTool
 
 from agente_perfilamiento.agents.base_agent import BaseAgent
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
-from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
+from agente_perfilamiento.infrastructure.persistence.provider import get_memory_service
 
 
 class FallbackAgent(BaseAgent):

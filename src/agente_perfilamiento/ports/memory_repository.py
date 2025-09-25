@@ -5,7 +5,7 @@ Application port for short-term memory repository.
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from agente_perfilamiento.domain.memory.models import ShortTermMemoryItem
+from agente_perfilamiento.domain.models.memory import ShortTermMemoryItem
 
 
 class MemoryRepository(ABC):
@@ -32,4 +32,3 @@ class MemoryRepository(ABC):
     @abstractmethod
     def clear_session(self, session_id: str) -> None:  # pragma: no cover
         ...
-

@@ -10,8 +10,11 @@ from typing import List
 from langchain_core.tools import BaseTool
 
 from agente_perfilamiento.agents.base_agent import BaseAgent
-from agente_perfilamiento.domain.models.conversation_state import ConversationState
-from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
+from agente_perfilamiento.domain.models.conversation_state import (
+    ConversationState,
+    apply_state_defaults,
+)
+from agente_perfilamiento.infrastructure.persistence.provider import get_memory_service
 
 
 class RouterAgent(BaseAgent):
@@ -60,9 +63,33 @@ class RouterAgent(BaseAgent):
         # if any(keyword in user_input for keyword in farewell_keywords):
         #     return "final"
 
-        # For now, default to fallback for other cases
-        # In a real implementation, this would include more sophisticated routing logic
-        return "perfilamiento"
+        # High-level routing policy:
+        # - If conversation just starts and no prior messages -> welcome
+        # - If evaluation complete -> final
+        # - If ready_for_analysis -> analista
+        # - Else -> entrevistador
+
+        if not saludo_mostrado:
+            session_id = state.get("id_conversacion", "")
+            if session_id:
+                try:
+                    memory = get_memory_service()
+                    welcome_window = memory.get_window("welcome_agent", session_id)
+                except Exception:
+                    welcome_window = []
+                if not welcome_window:
+                    return "welcome"
+            else:
+                return "welcome"
+
+        if state.get("evaluation_complete"):
+            return "final"
+
+        if state.get("ready_for_analysis"):
+            return "analista"
+
+        # Default path: interviewing/collection
+        return "entrevistador"
 
     def process(self, state: ConversationState) -> ConversationState:
         """
@@ -75,6 +102,8 @@ class RouterAgent(BaseAgent):
             ConversationState: Updated conversation state with routing decision
         """
         self.logger.info("Processing router node")
+
+        state = apply_state_defaults(state)
 
         try:
             # Determine the next route using routing logic
@@ -99,6 +128,8 @@ class RouterAgent(BaseAgent):
                 target_agent_map = {
                     "welcome": "welcome_agent",
                     "perfilamiento": "perfilamiento_agent",
+                    "entrevistador": "entrevistador_agent",
+                    "analista": "analista_agent",
                     "final": "final_agent",
                     "fallback": "fallback_agent",
                 }

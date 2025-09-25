@@ -14,10 +14,10 @@ from agente_perfilamiento.agents.tools.memory_tools import (
     clear_conversation_memory,
     save_conversation_memory,
 )
-from agente_perfilamiento.application.services.long_term_memory_service import (
+from agente_perfilamiento.domain.services.long_term_memory_service import (
     LongTermMemoryService,
 )
-from agente_perfilamiento.infrastructure.memory.file_long_term_repository import (
+from agente_perfilamiento.adapters.file_long_term_repository import (
     FileLongTermMemoryRepository,
 )
 from agente_perfilamiento.domain.models.conversation_state import ConversationState

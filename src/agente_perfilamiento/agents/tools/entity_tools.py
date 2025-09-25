@@ -7,10 +7,10 @@ from typing import Dict
 
 from langchain_core.tools import tool
 
-from agente_perfilamiento.application.services.entity_memory_service import (
+from agente_perfilamiento.domain.services.entity_memory_service import (
     EntityMemoryService,
 )
-from agente_perfilamiento.infrastructure.memory.file_entity_repository import (
+from agente_perfilamiento.adapters.file_entity_repository import (
     FileEntityMemoryRepository,
 )
 from agente_perfilamiento.infrastructure.logging.logger import get_logger
@@ -55,4 +55,3 @@ def clear_entity_memory(user_id: str) -> str:
     except Exception as e:
         logger.error(f"clear_entity_memory error: {e}")
         return "ERROR"
-

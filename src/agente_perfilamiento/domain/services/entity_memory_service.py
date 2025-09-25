@@ -4,7 +4,7 @@ Application service for user entity memory (profile-like attributes).
 
 from typing import Dict
 
-from agente_perfilamiento.application.ports.entity_memory_repository import (
+from agente_perfilamiento.ports.entity_memory_repository import (
     EntityMemoryRepository,
 )
 
@@ -24,4 +24,3 @@ class EntityMemoryService:
 
     def clear(self, user_id: str) -> None:
         self._repo.clear(user_id)
-

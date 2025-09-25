@@ -9,11 +9,8 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
-# from agente_perfilamiento.adapters.conversation_repository import (
-#     FileConversationRepository,
-# )
 from agente_perfilamiento.application.orchestrator import app
-from agente_perfilamiento.application.services.memory_service import MemoryService
+from agente_perfilamiento.domain.services.memory_service import MemoryService
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
 from agente_perfilamiento.infrastructure.config.settings import (
     ensure_data_directories,
@@ -23,10 +20,10 @@ from agente_perfilamiento.infrastructure.logging.logger import (
     configure_logging,
     get_logger,
 )
-from agente_perfilamiento.infrastructure.memory.in_memory_repository import (
+from agente_perfilamiento.adapters.in_memory_repository import (
     InMemoryMemoryRepository,
 )
-from agente_perfilamiento.infrastructure.memory.provider import (
+from agente_perfilamiento.infrastructure.persistence.provider import (
     get_memory_service,
     set_memory_service,
 )
@@ -66,7 +63,10 @@ def create_initial_state(
 
 
 def process_conversation(
-    user_id: str, user_input: str, conversation_id: Optional[str] = None
+    user_id: str,
+    user_input: str,
+    conversation_id: Optional[str] = None,
+    existing_state: Optional[ConversationState] = None,
 ) -> ConversationState:
     """
     Processes a conversation turn through the agent orchestrator.
@@ -81,11 +81,23 @@ def process_conversation(
     """
     logger.info(f"Processing conversation for user {user_id}")
 
-    # Create or load conversation state
-    state = create_initial_state(user_id, user_input, conversation_id)
+    # Create or update conversation state
+    if existing_state:
+        state = {**existing_state}
+        # Ensure we track the conversation id consistently
+        if conversation_id:
+            state["id_conversacion"] = conversation_id
+        conversation_id = state.get("id_conversacion")
+        messages = list(state.get("mensajes_previos", []) or [])
+    else:
+        state = create_initial_state(user_id, user_input, conversation_id)
+        conversation_id = state["id_conversacion"]
+        messages = []
 
-    # Add user message to history
-    state["mensajes_previos"].append({"role": "user", "content": user_input})
+    # Update input and message history
+    state["input_usuario"] = user_input
+    messages.append({"role": "user", "content": user_input})
+    state["mensajes_previos"] = messages
 
     # Append user message to short-term memory (router as default agent context)
     try:
@@ -117,22 +129,6 @@ def process_conversation(
         return state
 
 
-def save_conversation(state: ConversationState) -> None:
-    """
-    Saves conversation state to persistent storage.
-
-    Args:
-        state: Conversation state to save
-    """
-    try:
-        repository = FileConversationRepository()
-        repository.save_conversation(state)
-        logger.info(f"Conversation {state['id_conversacion']} saved successfully")
-
-    except Exception as e:
-        logger.error(f"Error saving conversation: {e}")
-
-
 def main():
     """
     Main entry point for command-line execution.
@@ -155,15 +151,17 @@ def main():
 
     logger.info("Starting Agente_Perfilamiento CLI")
 
-    print(f"Welcome to Agente_Perfilamiento!")
+    print(f"Bienvenido a itti Academy")
     print("Type 'quit' or 'exit' to end the conversation.")
     print("-" * 50)
 
-    user_id = input("Enter your user ID (or press Enter for default): ").strip()
+    user_id = input("¿Mba'eteko pio? Bienvenido a itti Academy! ¿Cuál es tu nombre? : ").strip()
     if not user_id:
         user_id = "cli_user"
 
     conversation_id = str(uuid.uuid4())
+    current_state: Optional[ConversationState] = None
+    last_rendered_index = 0
 
     while True:
         try:
@@ -177,15 +175,24 @@ def main():
                 continue
 
             # Process conversation
-            result = process_conversation(user_id, user_input, conversation_id)
+            result = process_conversation(
+                user_id=user_id,
+                user_input=user_input,
+                conversation_id=conversation_id,
+                existing_state=current_state,
+            )
 
-            # Display assistant responses
-            for message in result.get("mensajes_previos", []):
-                if message["role"] == "assistant":
+            # Display only new assistant responses
+            messages = result.get("mensajes_previos", []) or []
+            new_messages = messages[last_rendered_index:]
+            for message in new_messages:
+                if message.get("role") == "assistant":
                     print(f"[Assistant]: {message['content']}")
+            last_rendered_index = len(messages)
 
             # Update conversation ID for continuation
             conversation_id = result["id_conversacion"]
+            current_state = result
 
         except KeyboardInterrupt:
             print("\nGoodbye!")

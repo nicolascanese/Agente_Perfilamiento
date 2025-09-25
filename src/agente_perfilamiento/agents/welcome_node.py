@@ -13,7 +13,7 @@ from agente_perfilamiento.agents.base_agent import BaseAgent
 from agente_perfilamiento.agents.tools.memory_tools import get_conversation_memory
 from agente_perfilamiento.agents.tools.entity_tools import get_entity_memory
 from agente_perfilamiento.domain.models.conversation_state import ConversationState
-from agente_perfilamiento.infrastructure.memory.provider import get_memory_service
+from agente_perfilamiento.infrastructure.persistence.provider import get_memory_service
 
 
 class WelcomeAgent(BaseAgent):
@@ -28,7 +28,7 @@ class WelcomeAgent(BaseAgent):
 
     def get_fallback_response(self) -> str:
         """Get fallback response for welcome agent."""
-        return "¡Bienvenido a Agente_Perfilamiento! ¿En qué puedo ayudarte hoy?"
+        return "¡Bienvenido a itti Academy! ¿En qué puedo ayudarte hoy?"
 
     def process(self, state: ConversationState) -> ConversationState:
         """
