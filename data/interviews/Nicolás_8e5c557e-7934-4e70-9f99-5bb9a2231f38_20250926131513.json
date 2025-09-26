@@ -1,0 +1,106 @@
+{
+  "id_user": "Nicolás",
+  "session_id": "8e5c557e-7934-4e70-9f99-5bb9a2231f38",
+  "created_at": "2025-09-26T13:15:13.907350",
+  "current_question_index": 13,
+  "conversation_history": [
+    {
+      "role": "user",
+      "content": "quiero hacer el perfilamiento"
+    },
+    {
+      "role": "user",
+      "content": "nada relevante"
+    },
+    {
+      "role": "user",
+      "content": "explorar el menu"
+    },
+    {
+      "role": "user",
+      "content": "organizando"
+    },
+    {
+      "role": "user",
+      "content": "clasico"
+    },
+    {
+      "role": "user",
+      "content": "economia"
+    },
+    {
+      "role": "user",
+      "content": "a"
+    },
+    {
+      "role": "user",
+      "content": "b"
+    },
+    {
+      "role": "user",
+      "content": "instalar todo"
+    },
+    {
+      "role": "user",
+      "content": "no tengo mama"
+    },
+    {
+      "role": "user",
+      "content": "leo uno a un"
+    },
+    {
+      "role": "user",
+      "content": "logica"
+    },
+    {
+      "role": "user",
+      "content": "mudno abierto"
+    }
+  ],
+  "user_profile": {
+    "respuestas_test": [
+      "quiero hacer el perfilamiento",
+      "nada relevante",
+      "explorar el menu",
+      "organizando",
+      "clasico",
+      "economia",
+      "a",
+      "b",
+      "instalar todo",
+      "no tengo mama",
+      "leo uno a un",
+      "logica",
+      "mudno abierto"
+    ],
+    "intereses": [],
+    "valores": []
+  },
+  "structured_profile": {
+    "perfil_nombre": "Nicolás",
+    "dimensiones_mapeadas": {
+      "intereses": [],
+      "estilo_aprendizaje": [
+        "metodico_estructurado",
+        "aprendizaje_continuo"
+      ],
+      "competencias_tecnicas_iniciales": {
+        "pensamiento_logico": "alto",
+        "creatividad_visual": "medio"
+      },
+      "valores_aspiraciones": [
+        "orientacion_cliente",
+        "perspicacia_empresarial"
+      ]
+    },
+    "tags_acumulados_vector": {
+      "creatividad_visual": 1,
+      "pensamiento_logico": 2,
+      "metodico_estructurado": 2,
+      "orientacion_cliente": 1,
+      "perspicacia_empresarial": 1,
+      "adaptabilidad": 1
+    },
+    "Resumen": {}
+  }
+}

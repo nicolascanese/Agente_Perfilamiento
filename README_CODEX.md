@@ -39,8 +39,7 @@ python -m pytest src/tests/test_conversation_flow.py
 This test stubs the LLM, exercises the full flow, verifies interview summary persistence, and removes the temp file afterward.
 
 ## Recent Decisions / Changelog-lite
-- **Conversation Flow Split**: Interviewer and analyst are now separate nodes. Interviewer collects data, analyst generates recommendations.
-- **Interview Summary**: interviewer writes JSON to `data/interviews/<user>_<session>_<timestamp>.json`, stored in state (`interview_summary`, `interview_summary_path`).
-- **Router Logic**: router checks welcome memory before re-routing; uses `ready_for_analysis` and `evaluation_complete` flags to branch to analyst/final.
-- **CLI Print Behaviour**: only new assistant messages are printed each turn, preventing repeated output.
-- **Prompt Update**: interviewer prompt reverted to original detailed version, but instruction now states to output only `<<FIN_ENTREVISTA>>` when done.
+- **Structured Interview Output**: Interviewer now triggers a follow-up LLM call when `ready_for_analysis` activates, generating the full JSON profile (`dimensiones_mapeadas`, `tags_acumulados_vector`, `Resumen`). This payload is saved in `data/interviews/...` under `structured_profile` for the analyst.
+- **Summary Persistence**: Each interview summary file stores `conversation_history`, `user_profile`, and the new `structured_profile`. The path is still recorded via `state["interview_summary_path"]`.
+- **Router -> Analyst**: Router continues to route to `analista` when `ready_for_analysis` is `True`; the analyst receives the enriched summary and produces recommendations as before.
+- **CLI Print Behaviour**: CLI keeps printing only new assistant turns, avoiding duplicate output.

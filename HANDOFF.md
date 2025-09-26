@@ -1,15 +1,15 @@
 # HANDOFF
 
 ## Current Status
-- Flow: welcome → entrevistador → analista → final → memory, controlled by `router_node`. Interviewer stores summaries and triggers analyst via `ready_for_analysis` or `<<FIN_ENTREVISTA>>` token.
-- Summaries persisted to `data/interviews/` with timestamped filenames and referenced by `interview_summary_path` in state.
+- Flow: welcome -> entrevistador -> analista -> final -> memory, controlled by `router_node`. Interviewer stores conversation data, generates a structured profile JSON when `ready_for_analysis` (or `<<FIN_ENTREVISTA>>`) fires, and then triggers the analyst.
+- Summaries persisted to `data/interviews/` with timestamped filenames and referenced by `interview_summary_path`; each file contains `conversation_history`, `user_profile`, and the new `structured_profile`.
 - CLI prints only new assistant messages.
 - Latest tests pass (`python -m pytest src/tests/test_conversation_flow.py`).
 
 ## Open Challenges / Next Steps
-1. Validate behaviour with real LLM responses (no stubs) to ensure interviewer finishes naturally and analyst produces correct outputs.
+1. Validate end-to-end with real LLM responses to ensure the interviewer returns parseable `structured_profile` JSON and the analyst consumes it without errors.
 2. Confirm environment variables (`LLM_API_KEY`, provider settings) are configured in `.env` before running CLI.
-3. Optional: extend testing to cover final/memory nodes more exhaustively (current test stops at analyst output and summary cleanup).
+3. Extend automated tests to cover the new structured profile generation and the final/memory nodes (current test stops at analyst output).
 
 ## Key Paths & Artifacts
 - `data/interviews/`: persisted interview summaries (JSON). Example: `data/interviews/user-test_test-flow_20250924204645.json`.
@@ -22,7 +22,7 @@
 
 ## Schemas / Contracts
 - `ConversationState` (`src/agente_perfilamiento/domain/models/conversation_state.py`): includes `interview_summary`, `interview_summary_path`, `ready_for_analysis`, `evaluation_complete`.
-- Interview summary payload stored in JSON with keys: `id_user`, `session_id`, `created_at`, `current_question_index`, `conversation_history`, `user_profile`.
+- Interview summary payload stored in JSON with keys: `id_user`, `session_id`, `created_at`, `current_question_index`, `conversation_history`, `user_profile`, plus `structured_profile` when the LLM returns a valid object.
 - Interviewer must emit `<<FIN_ENTREVISTA>>` (as plain text) when done; router uses `ready_for_analysis` flag.
 
 ## Environment Notes
